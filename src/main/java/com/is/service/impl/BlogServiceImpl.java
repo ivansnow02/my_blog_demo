@@ -1,9 +1,10 @@
 package com.is.service.impl;
 
-import com.is.blog_demo.entity.Blog;
-import com.is.blog_demo.mapper.BlogMapper;
-import com.is.service.IBlogService;
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.is.entity.Blog;
+import com.is.mapper.BlogMapper;
+import com.is.service.IBlogService;
 import org.springframework.stereotype.Service;
 
 /**

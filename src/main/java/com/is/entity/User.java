@@ -3,10 +3,10 @@ package com.is.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * <p>
@@ -17,7 +17,6 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 2023-02-10
  */
 @TableName("m_user")
-@ApiModel(value = "User对象", description = "")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,7 +1,7 @@
 package com.is.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
  * @author is
  * @since 2023-02-10
  */
-@Controller
-@RequestMapping("/blog_demo/blog")
+@RestController
+@RequestMapping("blogs")
 public class BlogController {
 
 }

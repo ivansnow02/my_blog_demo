@@ -3,21 +3,20 @@ package com.is.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author is
  * @since 2023-02-10
  */
 @TableName("m_blog")
-@ApiModel(value = "Blog对象", description = "")
 public class Blog implements Serializable {
 
     private static final long serialVersionUID = 1L;
