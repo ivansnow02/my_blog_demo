@@ -1,10 +1,13 @@
 package com.is.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.is.entity.User;
 import com.is.mapper.UserMapper;
 import com.is.service.IUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -17,4 +20,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Autowired
+    UserMapper userMapper;
+
+    @Override
+    public User queryUserByName(String username) {
+        return userMapper.queryUserByName(username);
+    }
+
+    @Override
+    public Boolean updateLastLogin(Integer id) {
+        return userMapper.updateLastLogin(LocalDateTime.now(), id);
+    }
 }

@@ -1,11 +1,11 @@
 package com.is.service;
 
-import com.is.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.is.entity.User;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author is
@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
+    public User queryUserByName(String username);
+
+    public Boolean updateLastLogin(Integer id);
 }
