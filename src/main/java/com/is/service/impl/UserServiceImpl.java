@@ -23,10 +23,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     UserMapper userMapper;
 
-    @Override
-    public User queryUserByName(String username) {
-        return userMapper.queryUserByName(username);
-    }
 
     @Override
     public Boolean updateLastLogin(Integer id) {

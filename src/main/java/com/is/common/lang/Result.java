@@ -49,4 +49,12 @@ public class Result implements Serializable {
         r.setMsg(msg);
         return r;
     }
+
+    public static Result fail(String code, String msg) {
+        Result r = new Result();
+        r.setCode(code);
+        r.setData(null);
+        r.setMsg(msg);
+        return r;
+    }
 }

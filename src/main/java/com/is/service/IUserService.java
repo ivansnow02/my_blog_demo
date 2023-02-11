@@ -13,7 +13,6 @@ import com.is.entity.User;
  */
 public interface IUserService extends IService<User> {
 
-    public User queryUserByName(String username);
 
     public Boolean updateLastLogin(Integer id);
 }

@@ -1,5 +1,6 @@
 package com.is.shiro;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.is.entity.User;
 import com.is.service.IUserService;
 import org.apache.shiro.SecurityUtils;
@@ -39,7 +40,9 @@ public class UserRealm extends AuthorizingRealm {
         //用户名密码 数据库中取
 
         UsernamePasswordToken userToken = (UsernamePasswordToken) authenticationToken;
-        User user = userService.queryUserByName(userToken.getUsername());
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUsername, userToken.getUsername());
+        User user = userService.getOne(wrapper);
         if (user == null) {
             return null;
         }

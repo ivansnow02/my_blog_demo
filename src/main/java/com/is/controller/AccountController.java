@@ -12,7 +12,10 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
@@ -22,18 +25,21 @@ public class AccountController {
     @Autowired
     IUserService userService;
 
+
     @PostMapping("/login")
-    public Result login(@RequestBody User user) {
+    public Result login(@RequestBody User loginUser) {
         //获取当前用户
         Subject subject = SecurityUtils.getSubject();
-        String name = user.getUsername();
-        String pwd = user.getPassword();
+        String name = loginUser.getUsername();
+        String pwd = loginUser.getPassword();
         //封装用户的登录数据
         UsernamePasswordToken token = new UsernamePasswordToken(name, pwd);
         //执行登录方法
         try {
             subject.login(token);
-            User currentUser = userService.queryUserByName(name);
+            LambdaQueryWrapper<User> nameWrapper = new LambdaQueryWrapper<>();
+            nameWrapper.eq(User::getUsername, name);
+            User currentUser = userService.getOne(nameWrapper);
             userService.updateLastLogin(currentUser.getId());
             return Result.succ("登录成功", currentUser);
         } catch (UnknownAccountException e) {
@@ -48,8 +54,9 @@ public class AccountController {
         return Result.fail("未经授权无法访问");
     }
 
+
     @RequiresAuthentication
-    @GetMapping("/logout")
+    @RequestMapping("/logout")
     public Result logout() {
         SecurityUtils.getSubject().logout();
         return Result.succ(null);
@@ -61,9 +68,10 @@ public class AccountController {
         userLambdaQueryWrapper.eq(User::getUsername, regUser.getUsername());
         User temUser = userService.getOne(userLambdaQueryWrapper);
         if (temUser != null) {
-            return Result.fail("用户名重复");
+            return Result.fail("4000", "用户名重复");
         }
         regUser.setCreated(LocalDateTime.now());
+        regUser.setAvatar("https://i.328888.xyz/2023/02/11/RvKJF.th.jpeg");
         userService.save(regUser);
         return Result.succ("注册成功", regUser);
 

@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 
 /**
  * shiro启用注解拦截控制器
@@ -33,16 +30,16 @@ public class ShiroConfig {
             role：拥有某个角色权限才能访问
          */
         //拦截
-        Map<String, String> filterMap = new LinkedHashMap<>();
+//        Map<String, String> filterMap = new LinkedHashMap<>();
         //授权，正常情况下没有授权会跳转到未授权页面
 //        filterMap.put("/user/add","perms[user:add]");
 //        filterMap.put("/user/update","perms[user:update]");
-        filterMap.put("/user/*", "authc");
-        filterMap.put("/blog/*", "authc");
-        bean.setFilterChainDefinitionMap(filterMap);
+//        filterMap.put("/user/*", "authc");
+//        filterMap.put("/blog/*", "authc");
+//        bean.setFilterChainDefinitionMap(filterMap);
 
-        //设置登录请求
-        bean.setLoginUrl("/login");
+//        //设置登录请求
+//        bean.setLoginUrl("/toLogin");
         //未授权页面
         bean.setUnauthorizedUrl("/noauth");
         return bean;

@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     // 捕捉UnauthorizedException
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public Result handle401() {
-        return Result.fail("401", "Unauthorized", null);
+    public Result handle401(UnauthorizedException e) {
+        return Result.fail("401", e.getMessage(), null);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
