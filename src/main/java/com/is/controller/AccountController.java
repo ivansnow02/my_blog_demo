@@ -72,6 +72,7 @@ public class AccountController {
         }
         regUser.setCreated(LocalDateTime.now());
         regUser.setAvatar("https://i.328888.xyz/2023/02/11/RvKJF.th.jpeg");
+        regUser.setPerms("user");
         userService.save(regUser);
         return Result.succ("注册成功", regUser);
 

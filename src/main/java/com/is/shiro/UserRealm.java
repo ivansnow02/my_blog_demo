@@ -36,9 +36,6 @@ public class UserRealm extends AuthorizingRealm {
     //认证
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("执行了授权doGetAuthenticationInfo");
-        //用户名密码 数据库中取
-
         UsernamePasswordToken userToken = (UsernamePasswordToken) authenticationToken;
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, userToken.getUsername());

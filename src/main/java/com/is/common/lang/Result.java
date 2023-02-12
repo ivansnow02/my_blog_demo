@@ -16,6 +16,12 @@ public class Result implements Serializable {
         r.setData(data);
         r.setMsg("Success");
         return r;
+    }public static Result succ(String msg) {
+        Result r = new Result();
+        r.setCode("200");
+        r.setData(null);
+        r.setMsg(msg);
+        return r;
     }
 
     public static Result succ(String msg, Object data) {
