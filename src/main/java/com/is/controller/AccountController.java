@@ -9,7 +9,9 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RestController
 
@@ -49,11 +52,15 @@ public class AccountController {
         }
     }
 
-    @RequestMapping("/noauth")
+    @RequestMapping("/noAuth")
     public Result unauthorized() {
         return Result.fail("未经授权无法访问");
     }
 
+    @RequestMapping("/toLogin")
+    public Result toLogin() {
+        return Result.fail("请先登录");
+    }
 
     @RequiresAuthentication
     @RequestMapping("/logout")
@@ -66,13 +73,15 @@ public class AccountController {
     public Result reg(@Validated @RequestBody User regUser) {
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper.eq(User::getUsername, regUser.getUsername());
-        User temUser = userService.getOne(userLambdaQueryWrapper);
-        if (temUser != null) {
+        if (userService.getOne(userLambdaQueryWrapper) != null) {
             return Result.fail("4000", "用户名重复");
         }
         regUser.setCreated(LocalDateTime.now());
         regUser.setAvatar("https://i.328888.xyz/2023/02/11/RvKJF.th.jpeg");
-        regUser.setPerms("user");
+        regUser.setRoles("user");
+        ByteSource salt = ByteSource.Util.bytes(regUser.getUsername());
+        String newPwd = new SimpleHash("MD5",regUser.getPassword(),salt,1024).toHex();
+        regUser.setPassword(newPwd);
         userService.save(regUser);
         return Result.succ("注册成功", regUser);
 

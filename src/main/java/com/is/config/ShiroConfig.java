@@ -1,6 +1,7 @@
 package com.is.config;
 
 import com.is.shiro.UserRealm;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,26 +39,37 @@ public class ShiroConfig {
 //        filterMap.put("/blog/*", "authc");
 //        bean.setFilterChainDefinitionMap(filterMap);
 
-//        //设置登录请求
-//        bean.setLoginUrl("/toLogin");
+        //设置登录请求
+        bean.setLoginUrl("/toLogin");
         //未授权页面
-        bean.setUnauthorizedUrl("/noauth");
+        bean.setUnauthorizedUrl("/noAuth");
         return bean;
     }
 
     //DefaultWebSecurityManager
     @Bean
-    public DefaultWebSecurityManager defaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm) {
+    public DefaultWebSecurityManager defaultWebSecurityManager(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher hashedCredentialsMatcher) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //关联UserRealm
-        securityManager.setRealm(userRealm);
+        securityManager.setRealm(userRealm(hashedCredentialsMatcher));
         return securityManager;
     }
 
     //创建Realm对象，需要自定义
     @Bean
-    public UserRealm userRealm() {
-        return new UserRealm();
+    public UserRealm userRealm(HashedCredentialsMatcher hashedCredentialsMatcher) {
+        UserRealm userRealm = new UserRealm();
+        userRealm.setCredentialsMatcher(hashedCredentialsMatcher);
+        return userRealm;
+    }
+
+    //密码匹配器
+    @Bean
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName("MD5");
+        hashedCredentialsMatcher.setHashIterations(1024);//加密次数
+        return hashedCredentialsMatcher;
     }
 }
 
