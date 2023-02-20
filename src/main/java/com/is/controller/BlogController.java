@@ -56,7 +56,7 @@ public class BlogController {
         User user = (User) subject.getPrincipal();
         blog.setUserId(user.getId());
         blog.setStatus(true);
-        blog.setCreated(LocalDateTime.now());
+//        blog.setCreated(LocalDateTime.now());
         boolean flag = blogService.save(blog);
         return flag?Result.succ("发布成功",blog):Result.fail("发布失败");
     }

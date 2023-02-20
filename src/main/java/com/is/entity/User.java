@@ -1,8 +1,6 @@
 package com.is.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -37,8 +35,10 @@ public class User implements Serializable {
     @NotBlank(message = "请输入密码")
     private String password;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime lastLogin;
 
     private String roles;

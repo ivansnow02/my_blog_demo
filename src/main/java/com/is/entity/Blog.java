@@ -1,8 +1,6 @@
 package com.is.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -34,6 +32,7 @@ public class Blog implements Serializable {
 
     private String content;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
     private Boolean status;
