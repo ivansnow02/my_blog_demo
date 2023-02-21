@@ -21,7 +21,7 @@ CREATE TABLE `m_blog`
     `title`       varchar(255) NOT NULL,
     `description` varchar(255) NOT NULL,
     `content`     longtext,
-    `created`     datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    `created`     datetime   DEFAULT NULL,
     `status`      tinyint(4) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB

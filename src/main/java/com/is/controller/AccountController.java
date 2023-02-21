@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 @RestController
 
 public class AccountController {
@@ -43,7 +40,11 @@ public class AccountController {
             LambdaQueryWrapper<User> nameWrapper = new LambdaQueryWrapper<>();
             nameWrapper.eq(User::getUsername, name);
             User currentUser = userService.getOne(nameWrapper);
-            userService.updateLastLogin(currentUser.getId());
+            currentUser.setPassword(null);
+//            LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+//            updateWrapper.eq(User::getUsername, name).set(User::getUsername, name);
+            userService.updateById(currentUser);
+//            userService.update(updateWrapper);
             return Result.succ("登录成功", currentUser);
         } catch (UnknownAccountException e) {
             return Result.fail("用户名错误");
@@ -76,7 +77,7 @@ public class AccountController {
         if (userService.getOne(userLambdaQueryWrapper) != null) {
             return Result.fail("4000", "用户名重复");
         }
-        regUser.setCreated(LocalDateTime.now());
+//        regUser.setCreated(LocalDateTime.now());
         regUser.setAvatar("https://i.328888.xyz/2023/02/11/RvKJF.th.jpeg");
         regUser.setRoles("user");
         ByteSource salt = ByteSource.Util.bytes(regUser.getUsername());

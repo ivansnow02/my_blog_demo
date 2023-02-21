@@ -3,7 +3,6 @@ package com.is.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.is.common.lang.Result;
-import com.is.entity.Blog;
 import com.is.entity.User;
 import com.is.service.IUserService;
 import org.apache.shiro.SecurityUtils;
@@ -14,7 +13,6 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -81,12 +79,21 @@ public class UserController {
         return Result.succ(users);
 
     }
+
     @GetMapping("/{currentPage}/{size}")
-    public Result blogPages(@PathVariable Integer currentPage, @PathVariable Integer size) {
+    public Result blogPages(@PathVariable Integer currentPage,
+                            @PathVariable Integer size,
+                            @RequestParam(required = false) String username,
+                            @RequestParam(required = false) String email) {
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        userLambdaQueryWrapper.isNotNull(User::getId);
+        userLambdaQueryWrapper
+                .isNotNull(User::getId)
+                .and(wrapper -> wrapper
+                        .like(!username.isEmpty(), User::getUsername, username)
+                        .eq(!email.isEmpty(), User::getEmail, email)
+                );
         Page<User> page = userService.page(new Page<>(currentPage, size), userLambdaQueryWrapper);
-        if( currentPage > page.getPages()) {
+        if (currentPage > page.getPages()) {
             page = userService.page(new Page<>(page.getPages(), size), userLambdaQueryWrapper);
         }
 

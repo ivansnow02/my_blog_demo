@@ -1,8 +1,6 @@
 package com.is.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.is.common.lang.Result;
 import com.is.entity.Blog;
@@ -10,16 +8,14 @@ import com.is.entity.User;
 import com.is.service.IBlogService;
 import com.is.service.IUserService;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.*;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <p>
@@ -90,18 +86,30 @@ public class BlogController {
     @GetMapping
     public Result getAll() {
         LambdaQueryWrapper<Blog> blogLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        blogLambdaQueryWrapper.eq(Blog::getStatus,true);
+        blogLambdaQueryWrapper.eq(Blog::getStatus, true);
         List<Blog> blogs = blogService.list(blogLambdaQueryWrapper);
         return Result.succ(blogs);
 
     }
+
     @GetMapping("/{currentPage}/{size}")
-    public Result blogPages(@PathVariable Integer currentPage, @PathVariable Integer size) {
+    public Result blogPages(@PathVariable Integer currentPage,
+                            @PathVariable Integer size,
+                            @RequestParam(required = false) String title,
+                            @RequestParam(required = false) String description,
+                            @RequestParam(required = false) String content,
+                            @RequestParam(required = false) Integer userId) {
         LambdaQueryWrapper<Blog> blogLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        blogLambdaQueryWrapper.isNotNull(Blog::getId);
-        blogLambdaQueryWrapper.eq(Blog::getStatus,true);
+        blogLambdaQueryWrapper
+                .isNotNull(Blog::getId)
+                .eq(Blog::getStatus, true)
+                .and(wrapper -> wrapper
+                        .like(!title.isEmpty(), Blog::getTitle, title)
+                        .like(!description.isEmpty(), Blog::getDescription, description)
+                        .like(!content.isEmpty(), Blog::getContent, content)
+                        .eq(userId != null, Blog::getUserId, userId));
         Page<Blog> page = blogService.page(new Page<>(currentPage, size), blogLambdaQueryWrapper);
-        if( currentPage > page.getPages()) {
+        if (currentPage > page.getPages()) {
             page = blogService.page(new Page<>(page.getPages(), size), blogLambdaQueryWrapper);
         }
 
