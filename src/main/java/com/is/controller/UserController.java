@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.is.common.lang.Result;
 import com.is.entity.User;
 import com.is.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -22,6 +23,7 @@ import java.util.List;
  * @author is
  * @since 2023-02-10
  */
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @RequiresAuthentication
