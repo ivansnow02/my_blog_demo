@@ -92,18 +92,18 @@ public class BlogController {
     @GetMapping("/{currentPage}/{size}")
     public Result blogPages(@PathVariable Integer currentPage,
                             @PathVariable Integer size,
-                            @RequestParam(required = false) String title,
-                            @RequestParam(required = false) String description,
-                            @RequestParam(required = false) String content,
-                            @RequestParam(required = false) Integer userId) {
+                            @RequestParam(required = false, defaultValue = "") String title,
+                            @RequestParam(required = false, defaultValue = "") String description,
+                            @RequestParam(required = false, defaultValue = "") String content,
+                            @RequestParam(required = false, defaultValue = "") Integer userId) {
         LambdaQueryWrapper<Blog> blogLambdaQueryWrapper = new LambdaQueryWrapper<>();
         blogLambdaQueryWrapper
                 .isNotNull(Blog::getId)
                 .eq(Blog::getStatus, true)
                 .and(wrapper -> wrapper
-                        .like(!title.isEmpty(), Blog::getTitle, title)
-                        .like(!description.isEmpty(), Blog::getDescription, description)
-                        .like(!content.isEmpty(), Blog::getContent, content)
+                        .like(Blog::getTitle, title)
+                        .like(Blog::getDescription, description)
+                        .like(Blog::getContent, content)
                         .eq(userId != null, Blog::getUserId, userId));
         Page<Blog> page = blogService.page(new Page<>(currentPage, size), blogLambdaQueryWrapper);
         if (currentPage > page.getPages()) {

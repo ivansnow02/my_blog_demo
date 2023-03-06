@@ -82,13 +82,13 @@ public class UserController {
     @GetMapping("/{currentPage}/{size}")
     public Result blogPages(@PathVariable Integer currentPage,
                             @PathVariable Integer size,
-                            @RequestParam(required = false) String username,
-                            @RequestParam(required = false) String email) {
+                            @RequestParam(required = false, defaultValue = "") String username,
+                            @RequestParam(required = false, defaultValue = "") String email) {
         LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userLambdaQueryWrapper
                 .isNotNull(User::getId)
                 .and(wrapper -> wrapper
-                        .like(!username.isEmpty(), User::getUsername, username)
+                        .like(User::getUsername, username)
                         .eq(!email.isEmpty(), User::getEmail, email)
                 );
         Page<User> page = userService.page(new Page<>(currentPage, size), userLambdaQueryWrapper);
